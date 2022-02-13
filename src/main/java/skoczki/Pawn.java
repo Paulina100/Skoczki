@@ -27,8 +27,8 @@ public class Pawn {
 
     public void step(Direction direction) {
         Vector2d newPosition = this.position.add(direction.stepVector());
-        if (map.canMoveTo(newPosition)) {
-            Vector2d oldPosition = this.position;
+        Vector2d oldPosition = this.position;
+        if (map.canMoveTo(oldPosition, newPosition)) {
             this.position = newPosition;
 //            positionChanged(oldPosition, newPosition);
         }
@@ -39,8 +39,8 @@ public class Pawn {
 
     public void jump(Direction direction){
         Vector2d newPosition = this.position.add(direction.jumpVector());
-        if (map.canMoveTo(newPosition)) {
-            Vector2d oldPosition = this.position;
+        Vector2d oldPosition = this.position;
+        if (map.canMoveTo(oldPosition, newPosition)) {
             this.position = newPosition;
 //            positionChanged(oldPosition, newPosition);
         }

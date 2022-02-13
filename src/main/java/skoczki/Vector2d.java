@@ -2,6 +2,8 @@ package skoczki;
 
 import java.util.Objects;
 
+import static java.lang.Math.abs;
+
 public class Vector2d {
     public final int x;
     public final int y;
@@ -27,6 +29,17 @@ public class Vector2d {
         return new Vector2d(this.x - other.x, this.y - other.y);
     }
 
+    public boolean stepDistance(Vector2d other){
+        return ((this.y == other.y && abs(this.x - other.x) == 1) || (this.x == this.y && abs(this.y - other.y) == 1));
+    }
+
+    public boolean jumpDistance(Vector2d other){
+        return ((this.y == other.y && abs(this.x - other.x) == 2) || (this.x == this.y && abs(this.y - other.y) == 2));
+    }
+
+    public Vector2d between(Vector2d other){
+        return new Vector2d((this.x + other.x)/2, (this.y + other.y)/2);
+    }
 
     public boolean equals(Object other){
         if (this == other)

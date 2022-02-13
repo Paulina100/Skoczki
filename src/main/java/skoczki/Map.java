@@ -2,6 +2,7 @@ package skoczki;
 
 import java.util.HashMap;
 
+import static java.lang.Math.abs;
 import static skoczki.Color.BLACK;
 import static skoczki.Color.WHITE;
 
@@ -36,12 +37,13 @@ public class Map {
         return pawnAt(position) != null;
     }
 
-    private boolean isOnMap(Vector2d position){
-        return position.follows(upperLeftBoundary) && position.precedes(lowerRightBoundary);
-    }
+//    private boolean isOnMap(Vector2d position){
+//        return position.follows(upperLeftBoundary) && position.precedes(lowerRightBoundary);
+//    }
 
-    public boolean canMoveTo(Vector2d position) {
-        return !isOccupied(position) && isOnMap(position) ;
+    public boolean canMoveTo(Vector2d oldPosiiton, Vector2d newPosition)
+    {
+        return (oldPosiiton.stepDistance(newPosition)) || oldPosiiton.jumpDistance(newPosition) && isOccupied(oldPosiiton.between(newPosition));
     }
 
     public Vector2d getUpperLeftBoundary() {
