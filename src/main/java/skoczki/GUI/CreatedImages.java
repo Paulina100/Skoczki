@@ -35,7 +35,6 @@ public class CreatedImages {
         return imageView;
     }
 
-    // złączyć te dwie metody żeby wyglądały ładniej i nie powielały kodu
     public ImageView getImageView(Object object){
         if (object instanceof Pawn){
             if (((Pawn) object).getColor().equals(Color.BLACK))return createImageView(images.get(0));

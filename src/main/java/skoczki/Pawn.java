@@ -2,10 +2,10 @@ package skoczki;
 
 public class Pawn {
     private final Color color;
-    private Vector2d position;
-    private Map map;
+    private Position position;
+    private final Map map;
 
-    public Pawn (Color color, Vector2d position, Map map){
+    public Pawn (Color color, Position position, Map map){
         this.color = color;
         this.position = position;
         this.map = map;
@@ -15,43 +15,12 @@ public class Pawn {
         return color;
     }
 
-//    private void positionChanged(Vector2d oldPosition, Vector2d newPosition){
-//        for (IPositionChangeObserver observer: observers) {
-//            observer.positionChanged(oldPosition, newPosition);
-//        }
-//    }
-
-//    public void move(Direction direction){
-//
-//    }
-
-//    public void step(Direction direction) {
-//        Vector2d newPosition = this.position.add(direction.stepVector());
-//        Vector2d oldPosition = this.position;
-//        if (map.canMoveTo(oldPosition, newPosition)) {
-//            this.position = newPosition;
-////            positionChanged(oldPosition, newPosition);
-//        }
-////        else{
-////            jump(direction);
-////        }
-//    }
-//
-//    public void jump(Direction direction){
-//        Vector2d newPosition = this.position.add(direction.jumpVector());
-//        Vector2d oldPosition = this.position;
-//        if (map.canMoveTo(oldPosition, newPosition)) {
-//            this.position = newPosition;
-////            positionChanged(oldPosition, newPosition);
-//        }
-//    }
-
-    private void positionChanged(Vector2d oldPosition, Vector2d newPosition){
+    private void positionChanged(Position oldPosition, Position newPosition){
         map.positionChanged(oldPosition, newPosition);
     }
 
-    public void move(Vector2d newPosition){
-        Vector2d oldPosition = this.position;
+    public void move(Position newPosition){
+        Position oldPosition = this.position;
         if (oldPosition.equals(newPosition)) throw new IllegalArgumentException("You didn't make a move!");
         this.position = newPosition;
         positionChanged(oldPosition, newPosition);

@@ -1,25 +1,32 @@
 package skoczki;
 
-import skoczki.GUI.App;
+
+import javax.swing.*;
 
 public class WinningConditions {
-
     private int whitePawnsAtFinish = 0;
     private int blackPawnsAtFinish = 0;
-    private final App app;
 
-    public WinningConditions(App app){
-        this.app = app;
-    }
-
-    public boolean checkForWin(Color color, Vector2d oldPosition, Vector2d newPosition){
+    public void checkForWin(Color color, Position oldPosition, Position newPosition){
         if(!oldPosition.isAtFinish(color) && newPosition.isAtFinish(color)){
-            if (color.equals(Color.WHITE)) whitePawnsAtFinish += 1 ;
-            else blackPawnsAtFinish += 1;
+            switch (color){
+                case WHITE -> whitePawnsAtFinish += 1;
+                case BLACK -> blackPawnsAtFinish += 1;
+            }
+        }
+        else if(oldPosition.isAtFinish(color) && !newPosition.isAtFinish(color)){
+            switch (color){
+                case WHITE -> whitePawnsAtFinish -= 1;
+                case BLACK -> blackPawnsAtFinish -= 1;
+            }
         }
 
-//        return whitePawnsAtFinish == 1 || blackPawnsAtFinish == 1;
-        return whitePawnsAtFinish == 16 || blackPawnsAtFinish == 16;
+        if (whitePawnsAtFinish == 16 || blackPawnsAtFinish == 16){
+            JOptionPane.showMessageDialog(null,
+                    color + " wins!", "Congratulations",
+                    JOptionPane.PLAIN_MESSAGE);
+            System.exit(0);
+        }
     }
 
 }
