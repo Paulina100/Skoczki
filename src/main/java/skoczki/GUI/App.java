@@ -52,10 +52,10 @@ public class App extends Application{
         gridPane.getColumnConstraints().clear();
 
 
-        Vector2d currentPawnPosition = prevJumps.get(prevJumps.size() - 1);
-        prevJumps.add(currentPawnPosition);
+        Vector2d currentPosition = prevJumps.get(prevJumps.size() - 1);
+        prevJumps.add(currentPosition);
 
-        try {
+//        try {
             ColumnConstraints columnWidth = new ColumnConstraints(80);
             RowConstraints rowHeight = new RowConstraints(80);
             rowHeight.setValignment(VPos.CENTER);
@@ -78,11 +78,23 @@ public class App extends Application{
                     button.setContentDisplay(GRAPHIC_ONLY);
                     button.setMinSize(80, 80);
                     button.setOnAction(event -> {
+                        try {
 //                        button.setGraphic(createdImages.getClickedImageView(map.pawnAt(position)));
+                            if(map.canMoveTo(currentPosition, position).equals(MoveType.JUMP)) {
+                                prevJumps.add(position);
+                                makeJump(prevJumps);
+                            }
+                            else{
+                                throw new IllegalArgumentException("This move is not allowed!");
+                            }
 
-                        map.canMoveTo(currentPawnPosition, position);
-                        prevJumps.add(position);
-                        makeJump(prevJumps);
+                        } catch (IllegalArgumentException ex) {
+                            out.println(ex.getMessage());
+                            JOptionPane.showMessageDialog(null,
+                                    ex.getMessage());
+                            makeJump(prevJumps);
+    //            System.exit(1);
+                        }
 
 
                     });
@@ -96,13 +108,79 @@ public class App extends Application{
             gridPane.setGridLinesVisible(true);
 
 
-        } catch (IllegalArgumentException ex) {
-            out.println(ex.getMessage());
-            JOptionPane.showMessageDialog(null,
-                    "Eggs are not supposed to be green.");
-            makeJump(prevJumps);
-//            System.exit(1);
-        }
+//        } catch (IllegalArgumentException ex) {
+//            out.println(ex.getMessage());
+//            JOptionPane.showMessageDialog(null,
+//                    ex.getMessage());
+//            makeJump(prevJumps);
+////            System.exit(1);
+//        }
+    }
+
+    private void makeStep(Vector2d currentPosition){
+        gridPane.getChildren().clear();
+        gridPane.getRowConstraints().clear();
+        gridPane.getColumnConstraints().clear();
+
+
+//        try {
+            ColumnConstraints columnWidth = new ColumnConstraints(80);
+            RowConstraints rowHeight = new RowConstraints(80);
+            rowHeight.setValignment(VPos.CENTER);
+
+            for (int i = 0; i < 8; i++) {
+                gridPane.getRowConstraints().add(rowHeight);
+            }
+            for (int i = 0; i < 8; i++) {
+                gridPane.getColumnConstraints().add(columnWidth);
+            }
+
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    Vector2d position = new Vector2d(i, j);
+                    Button button = new Button("", createdImages.getImageView(map.pawnAt(position)));
+                    if(currentPosition.equals(position)){
+                        button.setGraphic(createdImages.getClickedImageView(map.pawnAt(position)));
+                    }
+
+                    button.setContentDisplay(GRAPHIC_ONLY);
+                    button.setMinSize(80, 80);
+                    button.setOnAction(event -> {
+                        try {
+                            if(map.canMoveTo(currentPosition, position) == MoveType.STEP) button.setGraphic(createdImages.getClickedImageView(map.pawnAt(position)));
+                            else{
+                                List<Vector2d> jumps = new ArrayList<>();
+                                jumps.add(currentPosition);
+                                jumps.add(position);
+                                makeJump(jumps);
+                            }
+
+                        }catch (IllegalArgumentException ex){
+                            out.println(ex.getMessage());
+                            JOptionPane.showMessageDialog(null,
+                                    ex.getMessage());
+                        }
+
+                    });
+                    gridPane.add(button, j, i);
+
+                }
+            }
+
+
+            gridPane.setGridLinesVisible(false);
+            gridPane.setGridLinesVisible(true);
+
+
+//        } catch (IllegalArgumentException ex) {
+////            out.println(ex.getMessage());
+////            JOptionPane.showMessageDialog(null,
+////                    ex.getMessage());
+////            List<Vector2d> jumps = new ArrayList<>();
+////            jumps.add(currentPosition);
+////            makeJump(jumps);
+////            System.exit(1);
+//        }
     }
 
     public void makeMove(Vector2d pawnPosition){
@@ -113,9 +191,11 @@ public class App extends Application{
             infoAndButton.getChildren().remove(startButton);
         });
 
-        List<Vector2d> jumps = new ArrayList<>();
-        jumps.add(pawnPosition);
-        makeJump(jumps);
+
+//        List<Vector2d> jumps = new ArrayList<>();
+//        jumps.add(pawnPosition);
+//        makeJump(jumps);
+        makeStep(pawnPosition);
 
     }
 

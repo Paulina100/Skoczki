@@ -1,5 +1,7 @@
 package skoczki;
 
+import skoczki.GUI.MoveType;
+
 import java.util.HashMap;
 
 import static java.lang.Math.abs;
@@ -41,13 +43,26 @@ public class Map {
 //        return position.follows(upperLeftBoundary) && position.precedes(lowerRightBoundary);
 //    }
 
-    public void canMoveTo(Vector2d oldPosiiton, Vector2d newPosition)
-    {
-        if (isOccupied(newPosition)) throw new IllegalArgumentException(newPosition + " is already occupied!");
-        if(oldPosiiton.stepDistance(newPosition)) return;
-        if (oldPosiiton.jumpDistance(newPosition) && isOccupied(oldPosiiton.between(newPosition))) return;
+    public void canStepTo(Vector2d oldPosition, Vector2d newPosition){
+        if (isOccupied(newPosition)) throw new IllegalArgumentException("This position is already occupied!");
+        if(oldPosition.stepDistance(newPosition)) return;
+        throw new IllegalArgumentException("This position is too far!");
+    }
 
-        throw new IllegalArgumentException(newPosition + " is too far!");
+    public void canJumpTo(Vector2d oldPosition, Vector2d newPosition){
+        if (isOccupied(newPosition)) throw new IllegalArgumentException("This position is already occupied!");
+        if (oldPosition.jumpDistance(newPosition) && isOccupied(oldPosition.between(newPosition))) return;
+
+        throw new IllegalArgumentException("This position is too far!");
+    }
+
+    public MoveType canMoveTo(Vector2d oldPositon, Vector2d newPosition)
+    {
+        if (isOccupied(newPosition)) throw new IllegalArgumentException("This move is not allowed!");
+        if(oldPositon.stepDistance(newPosition)) return MoveType.STEP;
+        if (oldPositon.jumpDistance(newPosition) && isOccupied(oldPositon.between(newPosition))) return MoveType.JUMP;
+
+        throw new IllegalArgumentException("This move is not allowed!");
     }
 
     public Vector2d getUpperLeftBoundary() {

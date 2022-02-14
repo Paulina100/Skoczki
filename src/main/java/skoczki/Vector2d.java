@@ -13,6 +13,10 @@ public class Vector2d {
         this.y = y;
     }
 
+    public String toString(){
+        return "(" + this.x + ", " + this.y + ")";
+    }
+
     public boolean precedes(Vector2d other){
         return this.x <= other.x && this.y <= other.y;
     }
@@ -30,11 +34,11 @@ public class Vector2d {
     }
 
     public boolean stepDistance(Vector2d other){
-        return ((this.y == other.y && abs(this.x - other.x) == 1) || (this.x == this.y && abs(this.y - other.y) == 1));
+        return ((this.y == other.y && abs(this.x - other.x) == 1) || (this.x == other.x && abs(this.y - other.y) == 1));
     }
 
     public boolean jumpDistance(Vector2d other){
-        return ((this.y == other.y && abs(this.x - other.x) == 2) || (this.x == this.y && abs(this.y - other.y) == 2));
+        return ((this.y == other.y && abs(this.x - other.x) == 2) || (this.x == other.x && abs(this.y - other.y) == 2));
     }
 
     public Vector2d between(Vector2d other){
