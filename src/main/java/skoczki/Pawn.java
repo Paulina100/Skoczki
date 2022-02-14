@@ -25,25 +25,25 @@ public class Pawn {
 
     }
 
-    public void step(Direction direction) {
-        Vector2d newPosition = this.position.add(direction.stepVector());
-        Vector2d oldPosition = this.position;
-        if (map.canMoveTo(oldPosition, newPosition)) {
-            this.position = newPosition;
-//            positionChanged(oldPosition, newPosition);
-        }
-//        else{
-//            jump(direction);
+//    public void step(Direction direction) {
+//        Vector2d newPosition = this.position.add(direction.stepVector());
+//        Vector2d oldPosition = this.position;
+//        if (map.canMoveTo(oldPosition, newPosition)) {
+//            this.position = newPosition;
+////            positionChanged(oldPosition, newPosition);
 //        }
-    }
-
-    public void jump(Direction direction){
-        Vector2d newPosition = this.position.add(direction.jumpVector());
-        Vector2d oldPosition = this.position;
-        if (map.canMoveTo(oldPosition, newPosition)) {
-            this.position = newPosition;
-//            positionChanged(oldPosition, newPosition);
-        }
-    }
+////        else{
+////            jump(direction);
+////        }
+//    }
+//
+//    public void jump(Direction direction){
+//        Vector2d newPosition = this.position.add(direction.jumpVector());
+//        Vector2d oldPosition = this.position;
+//        if (map.canMoveTo(oldPosition, newPosition)) {
+//            this.position = newPosition;
+////            positionChanged(oldPosition, newPosition);
+//        }
+//    }
 
 }

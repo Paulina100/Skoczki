@@ -9,6 +9,12 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import skoczki.*;
 
+import javax.swing.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
+import static java.lang.System.out;
 import static javafx.scene.control.ContentDisplay.GRAPHIC_ONLY;
 
 public class App extends Application{
@@ -40,12 +46,76 @@ public class App extends Application{
         primaryStage.show();
     }
 
-    public void makeMove(Pawn chosenPawn){
+    private void makeJump(List<Vector2d> prevJumps){
         gridPane.getChildren().clear();
         gridPane.getRowConstraints().clear();
         gridPane.getColumnConstraints().clear();
 
 
+        Vector2d currentPawnPosition = prevJumps.get(prevJumps.size() - 1);
+        prevJumps.add(currentPawnPosition);
+
+        try {
+            ColumnConstraints columnWidth = new ColumnConstraints(80);
+            RowConstraints rowHeight = new RowConstraints(80);
+            rowHeight.setValignment(VPos.CENTER);
+
+            for (int i = 0; i < 8; i++) {
+                gridPane.getRowConstraints().add(rowHeight);
+            }
+            for (int i = 0; i < 8; i++) {
+                gridPane.getColumnConstraints().add(columnWidth);
+            }
+
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    Vector2d position = new Vector2d(i, j);
+                    Button button = new Button("", createdImages.getImageView(map.pawnAt(position)));
+                    if(prevJumps.contains(position)){
+                        button.setGraphic(createdImages.getClickedImageView(map.pawnAt(position)));
+                    }
+
+                    button.setContentDisplay(GRAPHIC_ONLY);
+                    button.setMinSize(80, 80);
+                    button.setOnAction(event -> {
+//                        button.setGraphic(createdImages.getClickedImageView(map.pawnAt(position)));
+
+                        map.canMoveTo(currentPawnPosition, position);
+                        prevJumps.add(position);
+                        makeJump(prevJumps);
+
+
+                    });
+                    gridPane.add(button, j, i);
+
+                }
+            }
+
+
+            gridPane.setGridLinesVisible(false);
+            gridPane.setGridLinesVisible(true);
+
+
+        } catch (IllegalArgumentException ex) {
+            out.println(ex.getMessage());
+            JOptionPane.showMessageDialog(null,
+                    "Eggs are not supposed to be green.");
+            makeJump(prevJumps);
+//            System.exit(1);
+        }
+    }
+
+    public void makeMove(Vector2d pawnPosition){
+        infoAndButton.getChildren().add(startButton);
+        Pawn chosenPawn = map.pawnAt(pawnPosition);
+        startButton.setOnAction(event -> {
+            choosePawn(chosenPawn.getColor().opposite());
+            infoAndButton.getChildren().remove(startButton);
+        });
+
+        List<Vector2d> jumps = new ArrayList<>();
+        jumps.add(pawnPosition);
+        makeJump(jumps);
 
     }
 
@@ -61,11 +131,10 @@ public class App extends Application{
 
             if (playerColor == Color.BLACK){
                 label.setText("Blacks turn!");
-                infoAndButton.getChildren().add(startButton);
+
             }
             else{
                 label.setText("Whites turn!");
-                infoAndButton.getChildren().remove(startButton);
 
             }
 
@@ -85,8 +154,9 @@ public class App extends Application{
                             button.setContentDisplay(GRAPHIC_ONLY);
                             button.setMinSize(80, 80);
                             button.setOnAction(event -> {
-                                button.setGraphic(createdImages.getClickedImageView(map.pawnAt(position)));
-                                choosePawn(playerColor.opposite());
+//                                button.setGraphic(createdImages.getClickedImageView(map.pawnAt(position)));
+                                makeMove(position);
+                                //choosePawn(playerColor.opposite());
                             });
                             gridPane.add(button, j, i);
                         }
@@ -103,7 +173,7 @@ public class App extends Application{
 
 
         } catch (IllegalArgumentException ex) {
-            System.out.println(ex.getMessage());
+            out.println(ex.getMessage());
             System.exit(1);
         }
     }

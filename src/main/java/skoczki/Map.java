@@ -41,9 +41,13 @@ public class Map {
 //        return position.follows(upperLeftBoundary) && position.precedes(lowerRightBoundary);
 //    }
 
-    public boolean canMoveTo(Vector2d oldPosiiton, Vector2d newPosition)
+    public void canMoveTo(Vector2d oldPosiiton, Vector2d newPosition)
     {
-        return (oldPosiiton.stepDistance(newPosition)) || oldPosiiton.jumpDistance(newPosition) && isOccupied(oldPosiiton.between(newPosition));
+        if (isOccupied(newPosition)) throw new IllegalArgumentException(newPosition + " is already occupied!");
+        if(oldPosiiton.stepDistance(newPosition)) return;
+        if (oldPosiiton.jumpDistance(newPosition) && isOccupied(oldPosiiton.between(newPosition))) return;
+
+        throw new IllegalArgumentException(newPosition + " is too far!");
     }
 
     public Vector2d getUpperLeftBoundary() {
