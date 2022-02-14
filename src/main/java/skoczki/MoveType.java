@@ -1,4 +1,4 @@
-package skoczki.GUI;
+package skoczki;
 
 public enum MoveType {
     STEP,

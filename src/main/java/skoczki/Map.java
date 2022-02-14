@@ -1,7 +1,5 @@
 package skoczki;
 
-import skoczki.GUI.MoveType;
-
 import java.util.HashMap;
 
 import static java.lang.Math.abs;
@@ -22,8 +20,8 @@ public class Map {
     private void initMap(){
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 2; j++) {
-                Vector2d blackPosiiton = new Vector2d(j, i);
-                Vector2d whitePosiiton = new Vector2d(7 - j, i);
+                Vector2d blackPosiiton = new Vector2d(i, j);
+                Vector2d whitePosiiton = new Vector2d(i, 7 - j);
 
                 pawns.put(blackPosiiton, new Pawn(BLACK, blackPosiiton, this));
                 pawns.put(whitePosiiton, new Pawn(WHITE, whitePosiiton, this));
@@ -63,6 +61,12 @@ public class Map {
         if (oldPositon.jumpDistance(newPosition) && isOccupied(oldPositon.between(newPosition))) return MoveType.JUMP;
 
         throw new IllegalArgumentException("This move is not allowed!");
+    }
+
+    public void positionChanged(Vector2d oldPosition, Vector2d newPosition){
+        Pawn pawn = pawns.remove(oldPosition);
+
+        pawns.put(newPosition, pawn);
     }
 
     public Vector2d getUpperLeftBoundary() {

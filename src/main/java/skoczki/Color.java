@@ -8,4 +8,10 @@ public enum Color {
         if (this.equals(BLACK))return WHITE;
         return BLACK;
     }
+
+    @Override
+    public String toString() {
+        if (this == BLACK) return "Black";
+        return "White";
+    }
 }

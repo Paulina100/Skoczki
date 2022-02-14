@@ -21,9 +21,9 @@ public class Pawn {
 //        }
 //    }
 
-    public void move(Direction direction){
-
-    }
+//    public void move(Direction direction){
+//
+//    }
 
 //    public void step(Direction direction) {
 //        Vector2d newPosition = this.position.add(direction.stepVector());
@@ -45,5 +45,16 @@ public class Pawn {
 ////            positionChanged(oldPosition, newPosition);
 //        }
 //    }
+
+    private void positionChanged(Vector2d oldPosition, Vector2d newPosition){
+        map.positionChanged(oldPosition, newPosition);
+    }
+
+    public void move(Vector2d newPosition){
+        Vector2d oldPosition = this.position;
+        if (oldPosition.equals(newPosition)) throw new IllegalArgumentException("You didn't make a move!");
+        this.position = newPosition;
+        positionChanged(oldPosition, newPosition);
+    }
 
 }

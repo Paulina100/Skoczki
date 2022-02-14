@@ -41,6 +41,11 @@ public class Vector2d {
         return ((this.y == other.y && abs(this.x - other.x) == 2) || (this.x == other.x && abs(this.y - other.y) == 2));
     }
 
+    public boolean isAtFinish(Color color){
+        if (color.equals(Color.WHITE))return this.y == 0 || this.y == 1;
+        return this.y == 6 || this.y == 7;
+    }
+
     public Vector2d between(Vector2d other){
         return new Vector2d((this.x + other.x)/2, (this.y + other.y)/2);
     }

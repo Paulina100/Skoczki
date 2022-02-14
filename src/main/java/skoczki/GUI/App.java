@@ -11,7 +11,6 @@ import skoczki.*;
 
 import javax.swing.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 import static java.lang.System.out;
@@ -19,6 +18,7 @@ import static javafx.scene.control.ContentDisplay.GRAPHIC_ONLY;
 
 public class App extends Application{
     private final Map map = new Map();
+    private final WinningConditions winningConditions = new WinningConditions(this);
     private final GameEngine engine = new GameEngine(map, this);
     private final GridPane gridPane = new GridPane();
     private final Label label = new Label();
@@ -98,7 +98,7 @@ public class App extends Application{
 
 
                     });
-                    gridPane.add(button, j, i);
+                    gridPane.add(button, i, j);
 
                 }
             }
@@ -117,7 +117,7 @@ public class App extends Application{
 //        }
     }
 
-    private void makeStep(Vector2d currentPosition){
+    private void makeStep(List<Vector2d> prevJumps){
         gridPane.getChildren().clear();
         gridPane.getRowConstraints().clear();
         gridPane.getColumnConstraints().clear();
@@ -127,6 +127,9 @@ public class App extends Application{
             ColumnConstraints columnWidth = new ColumnConstraints(80);
             RowConstraints rowHeight = new RowConstraints(80);
             rowHeight.setValignment(VPos.CENTER);
+
+            Vector2d currentPosition = prevJumps.get(prevJumps.size() - 1);
+            prevJumps.add(currentPosition);
 
             for (int i = 0; i < 8; i++) {
                 gridPane.getRowConstraints().add(rowHeight);
@@ -147,12 +150,13 @@ public class App extends Application{
                     button.setMinSize(80, 80);
                     button.setOnAction(event -> {
                         try {
-                            if(map.canMoveTo(currentPosition, position) == MoveType.STEP) button.setGraphic(createdImages.getClickedImageView(map.pawnAt(position)));
+                            if(map.canMoveTo(currentPosition, position) == MoveType.STEP) {
+                                button.setGraphic(createdImages.getClickedImageView(map.pawnAt(position)));
+                                prevJumps.add(position);
+                            }
                             else{
-                                List<Vector2d> jumps = new ArrayList<>();
-                                jumps.add(currentPosition);
-                                jumps.add(position);
-                                makeJump(jumps);
+                                prevJumps.add(position);
+                                makeJump(prevJumps);
                             }
 
                         }catch (IllegalArgumentException ex){
@@ -162,7 +166,7 @@ public class App extends Application{
                         }
 
                     });
-                    gridPane.add(button, j, i);
+                    gridPane.add(button, i, j);
 
                 }
             }
@@ -186,16 +190,35 @@ public class App extends Application{
     public void makeMove(Vector2d pawnPosition){
         infoAndButton.getChildren().add(startButton);
         Pawn chosenPawn = map.pawnAt(pawnPosition);
+        List<Vector2d> jumps = new ArrayList<>();
+        jumps.add(pawnPosition);
         startButton.setOnAction(event -> {
-            choosePawn(chosenPawn.getColor().opposite());
-            infoAndButton.getChildren().remove(startButton);
+            try {
+                Vector2d newPosition = jumps.get(jumps.size() - 1);
+                chosenPawn.move(newPosition);
+                infoAndButton.getChildren().remove(startButton);
+
+                if (winningConditions.checkForWin(chosenPawn.getColor(), pawnPosition, newPosition)){
+                    JOptionPane.showMessageDialog(null,
+                            chosenPawn.getColor() + " wins!", "Congratulations",
+                            JOptionPane.PLAIN_MESSAGE);
+                    System.exit(0);
+                }
+
+                choosePawn(chosenPawn.getColor().opposite());
+            }catch (IllegalArgumentException ex){
+                out.println(ex.getMessage());
+                JOptionPane.showMessageDialog(null,
+                        ex.getMessage());
+            }
         });
 
 
 //        List<Vector2d> jumps = new ArrayList<>();
 //        jumps.add(pawnPosition);
 //        makeJump(jumps);
-        makeStep(pawnPosition);
+
+        makeStep(jumps);
 
     }
 
@@ -209,14 +232,7 @@ public class App extends Application{
             RowConstraints rowHeight = new RowConstraints(80);
             rowHeight.setValignment(VPos.CENTER);
 
-            if (playerColor == Color.BLACK){
-                label.setText("Blacks turn!");
-
-            }
-            else{
-                label.setText("Whites turn!");
-
-            }
+            label.setText(playerColor + "'s turn!");
 
             for (int i = 0; i < 8; i++) {
                 gridPane.getRowConstraints().add(rowHeight);
@@ -238,10 +254,10 @@ public class App extends Application{
                                 makeMove(position);
                                 //choosePawn(playerColor.opposite());
                             });
-                            gridPane.add(button, j, i);
+                            gridPane.add(button, i, j);
                         }
                         else{
-                            gridPane.add(createdImages.getImageView(map.pawnAt(position)), j, i);
+                            gridPane.add(createdImages.getImageView(map.pawnAt(position)), i, j);
                         }
                     }
                 }
