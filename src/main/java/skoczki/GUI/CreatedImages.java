@@ -10,10 +10,10 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FieldImage {
+public class CreatedImages {
     private final List<Image> images = new ArrayList<>();
 
-    public FieldImage(){
+    public CreatedImages(){
         try {
         images.add(new Image(new FileInputStream("src/main/resources/black.png")));
         images.add(new Image(new FileInputStream("src/main/resources/white.png")));
@@ -44,7 +44,7 @@ public class FieldImage {
         return createImageView(images.get(2));
     }
 
-    public ImageView getClicedImageView(Object object){
+    public ImageView getClickedImageView(Object object){
         if (object instanceof Pawn){
             if (((Pawn) object).getColor().equals(Color.BLACK))return createImageView(images.get(3));
             return createImageView(images.get(4));

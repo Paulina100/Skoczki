@@ -2,5 +2,10 @@ package skoczki;
 
 public enum Color {
     BLACK,
-    WHITE
+    WHITE;
+
+    public Color opposite(){
+        if (this.equals(BLACK))return WHITE;
+        return BLACK;
+    }
 }
