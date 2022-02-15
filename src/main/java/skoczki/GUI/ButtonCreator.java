@@ -19,9 +19,8 @@ public class ButtonCreator {
         button.setContentDisplay(GRAPHIC_ONLY);
         button.setMinSize(80, 80);
         button.setMaxSize(80, 80);
-        button.setOnAction(event -> {
-            button.setGraphic(createdImages.getClickedImageView(map.pawnAt(position)));
-        });
+
+        button.setOnAction(event -> button.setGraphic(createdImages.getClickedImageView(map.pawnAt(position))));
         return button;
     }
 
